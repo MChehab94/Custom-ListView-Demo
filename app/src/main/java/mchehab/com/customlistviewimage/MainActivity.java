@@ -90,12 +90,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                progressBar.setVisibility(View.GONE);
                 listViewAdapter.filter(newText);
                 return true;
             }
         });
 
-        searchView.setOnClickListener(e -> searchView.setIconified(false));
         searchView.setOnCloseListener(() -> {
             listViewAdapter.filter("");
             return false;
