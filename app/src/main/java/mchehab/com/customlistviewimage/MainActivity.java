@@ -8,8 +8,11 @@ import android.os.AsyncTask;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ListView;
@@ -72,6 +75,35 @@ public class MainActivity extends AppCompatActivity {
         setListOnScrollListener();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main_menu, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+
+        SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                listViewAdapter.filter(newText);
+                return true;
+            }
+        });
+
+        searchView.setOnClickListener(e -> searchView.setIconified(false));
+        searchView.setOnCloseListener(() -> {
+            listViewAdapter.filter("");
+            return false;
+        });
+
+        return true;
+    }
+
     private void setListViewFooter(){
         View view = LayoutInflater.from(this).inflate(R.layout.footer_listview_progressbar, null);
         progressBar = view.findViewById(R.id.progressBar);
@@ -103,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         int size = listPerson.size();
         for(int i=1;i<=10;i++){
             if((size + i) < listCompleteData.size()){
-                listPerson.add(listCompleteData.get(size + i));
+                listViewAdapter.addItem(listCompleteData.get(size + i));
             }
         }
         listViewAdapter.notifyDataSetChanged();
