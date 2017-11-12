@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,15 +20,22 @@ public class ListViewAdapter extends BaseAdapter {
 
     private Context context;
     private List<Person> listPersons;
+    private List<Person> listPersonsFilter;
 
     public ListViewAdapter(Context context, List<Person> listPersons){
         this.context = context;
         this.listPersons = listPersons;
+        listPersonsFilter = new ArrayList<>(listPersons);
+    }
+
+    public void addItem(Person person){
+        listPersons.add(person);
+        listPersonsFilter.add(person);
     }
 
     @Override
     public int getCount() {
-        return listPersons.size();
+        return listPersonsFilter.size();
     }
 
     @Override
@@ -56,13 +64,31 @@ public class ListViewAdapter extends BaseAdapter {
         }else{
             viewHolder = (ViewHolder)convertView.getTag();
         }
-        Person person = listPersons.get(position);
+        Person person = listPersonsFilter.get(position);
 
         viewHolder.textViewName.setText(person.getFirstName() + " " + person.getLastName());
         viewHolder.textViewDescription.setText(person.getDescription());
         viewHolder.imageViewProfilePic.setImageDrawable(getImageDrawable(person.getImageName()));
 
         return convertView;
+    }
+
+    public void filter(String text){
+        text = text.toLowerCase();
+        listPersonsFilter.clear();
+        if(text.length() == 0){
+            listPersonsFilter.addAll(listPersons);
+        }else{
+            String name;
+            for(Person person : listPersons){
+                name = (person.getFirstName() + " " + person.getLastName()).toLowerCase();
+                if(name.contains(text)){
+                    listPersonsFilter.add(person);
+                }
+            }
+        }
+
+        notifyDataSetChanged();
     }
 
     private Drawable getImageDrawable(String imageName){
@@ -76,5 +102,4 @@ public class ListViewAdapter extends BaseAdapter {
         TextView textViewName;
         TextView textViewDescription;
     }
-
 }
