@@ -3,4 +3,16 @@
     <string name="title_activity_main2">Main2Activity</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_add">ActivityAdd</string>
+    <string-array name="images">
+        <item>image1</item>
+        <item>image2</item>
+        <item>image3</item>
+        <item>image4</item>
+        <item>image5</item>
+        <item>image6</item>
+        <item>image7</item>
+        <item>image8</item>
+        <item>image9</item>
+    </string-array>
 </resources>
