@@ -78,6 +78,21 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(listViewAdapter);
         setListViewFooter();
         setListOnScrollListener();
+        setFloatingActionButtonAddListener();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 101 && resultCode == RESULT_OK){
+            Person person = new Person();
+            person.setFirstName(data.getStringExtra("firstName"));
+            person.setLastName(data.getStringExtra("lastName"));
+            person.setDescription(data.getStringExtra("description"));
+            person.setImageName(data.getStringExtra("imageName"));
+            listViewAdapter.addItem(person);
+            listViewAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -111,7 +126,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void setFloatingActionButtonAddListener(){
         floatingActionButtonAdd.setOnClickListener(e -> {
-
+            Intent intent = new Intent(this, ActivityAdd.class);
+            startActivityForResult(intent, 101);
         });
     }
 
