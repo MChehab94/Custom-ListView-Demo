@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private AsyncTaskWait asyncTaskWait;
 
+    private FloatingActionButton floatingActionButtonAdd;
+
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -64,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        floatingActionButtonAdd = findViewById(R.id.floatingActionButtonAdd);
 
         listView = findViewById(R.id.listView);
         listCompleteData = readListFromFile();
@@ -102,6 +107,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
         return true;
+    }
+
+    private void setFloatingActionButtonAddListener(){
+        floatingActionButtonAdd.setOnClickListener(e -> {
+
+        });
     }
 
     private void setListViewFooter(){

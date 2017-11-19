@@ -4,11 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="mchehab.com.customlistviewimage.MainActivity">
 
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButtonAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:src="@android:drawable/ic_input_add"
+        android:layout_margin="8dp"
+        app:layout_behavior="com.support.android.designlibdemo.ScrollAwareFABBehavior"/>
 
 </RelativeLayout>
