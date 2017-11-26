@@ -42,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
     private FloatingActionButton floatingActionButtonAdd;
 
+    private MenuItem menuItemSearch;
+    private MenuItem menuItemDelete;
+
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -78,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(listViewAdapter);
         setListViewFooter();
         setListOnScrollListener();
+        setListOnLongPressListener();
         setFloatingActionButtonAddListener();
     }
 
@@ -99,9 +103,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main_menu, menu);
 
-        MenuItem menuItem = menu.findItem(R.id.action_search);
+        menuItemSearch = menu.findItem(R.id.action_search);
+        menuItemDelete = menu.findItem(R.id.action_delete);
 
-        SearchView searchView = (SearchView) menuItem.getActionView();
+        menuItemDelete.setVisible(false);
+
+        SearchView searchView = (SearchView) menuItemSearch.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -121,7 +128,22 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
+        menuItemDelete.setOnMenuItemClickListener(item -> {
+            listViewAdapter.removeSelectedPersons();
+            listViewAdapter.notifyDataSetChanged();
+            if(listViewAdapter.getCount() <= 5){
+                loadData();
+            }
+            showDeleteMenu(false);
+            return true;
+        });
+
         return true;
+    }
+
+    private void showDeleteMenu(boolean show){
+        menuItemDelete.setVisible(show);
+        menuItemSearch.setVisible(!show);
     }
 
     private void setFloatingActionButtonAddListener(){
@@ -143,18 +165,34 @@ public class MainActivity extends AppCompatActivity {
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if(scrollState == SCROLL_STATE_IDLE && listView.getLastVisiblePosition() ==
                         listPerson.size()){
-                    if(asyncTaskWait == null || asyncTaskWait.getStatus() != AsyncTask.Status
-                            .RUNNING){
-                        progressBar.setVisibility(View.VISIBLE);
-                        asyncTaskWait = new AsyncTaskWait(new WeakReference<Context>(MainActivity
-                                .this));
-                        asyncTaskWait.execute();
-                    }
+                    loadData();
                 }
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {}
+        });
+    }
+
+    private void loadData(){
+        if(asyncTaskWait == null || asyncTaskWait.getStatus() != AsyncTask.Status
+                .RUNNING){
+            progressBar.setVisibility(View.VISIBLE);
+            asyncTaskWait = new AsyncTaskWait(new WeakReference<Context>(MainActivity
+                    .this));
+            asyncTaskWait.execute();
+        }
+    }
+
+    private void setListOnLongPressListener(){
+        listView.setOnItemLongClickListener((parent, view, position, id) -> {
+            listViewAdapter.handleLongPress(position, view);
+            if(listViewAdapter.getListPersonsSelected().size() > 0){
+                showDeleteMenu(true);
+            }else{
+                showDeleteMenu(false);
+            }
+            return true;
         });
     }
 
