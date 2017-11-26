@@ -22,15 +22,45 @@ public class ListViewAdapter extends BaseAdapter {
     private List<Person> listPersons;
     private List<Person> listPersonsFilter;
 
+    private List<Person> listPersonsSelected;
+    private List<View> listSelectedRows;
+
     public ListViewAdapter(Context context, List<Person> listPersons){
         this.context = context;
         this.listPersons = listPersons;
         listPersonsFilter = new ArrayList<>(listPersons);
+        listPersonsSelected = new ArrayList<>();
+        listSelectedRows = new ArrayList<>();
     }
 
     public void addItem(Person person){
         listPersons.add(person);
         listPersonsFilter.add(person);
+    }
+
+    public void handleLongPress(int position, View view){
+        if(listSelectedRows.contains(view)){
+            listSelectedRows.remove(view);
+            listPersonsSelected.remove(listPersons.get(position));
+            view.setBackgroundResource(R.color.colorWhite);
+        }else{
+            listPersonsSelected.add(listPersons.get(position));
+            listSelectedRows.add(view);
+            view.setBackgroundResource(R.color.colorDarkGray);
+        }
+    }
+
+    public List<Person> getListPersonsSelected(){
+        return listPersonsSelected;
+    }
+
+    public void removeSelectedPersons(){
+        listPersons.removeAll(listPersonsSelected);
+        listPersonsFilter.removeAll(listPersonsSelected);
+        listPersonsSelected.clear();
+        for(View view : listSelectedRows)
+            view.setBackgroundResource(R.color.colorWhite);
+        listSelectedRows.clear();
     }
 
     @Override
@@ -69,6 +99,9 @@ public class ListViewAdapter extends BaseAdapter {
         viewHolder.textViewName.setText(person.getFirstName() + " " + person.getLastName());
         viewHolder.textViewDescription.setText(person.getDescription());
         viewHolder.imageViewProfilePic.setImageDrawable(getImageDrawable(person.getImageName()));
+
+        int resource = listPersonsSelected.contains(person) ? R.color.colorDarkGray:R.color.colorWhite;
+        convertView.setBackgroundResource(resource);
 
         return convertView;
     }
