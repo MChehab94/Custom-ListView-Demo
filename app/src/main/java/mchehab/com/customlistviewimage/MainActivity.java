@@ -22,6 +22,8 @@ import android.widget.ProgressBar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.parceler.Parcels;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -83,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         setListOnScrollListener();
         setListOnLongPressListener();
         setFloatingActionButtonAddListener();
+        setListViewOnItemClickListener();
     }
 
     @Override
@@ -139,6 +142,17 @@ public class MainActivity extends AppCompatActivity {
         });
 
         return true;
+    }
+
+    private void setListViewOnItemClickListener(){
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            Person person = listPerson.get(position);
+            Intent intent = new Intent(this, ActivityAdd.class);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("person", Parcels.wrap(person));
+            intent.putExtras(bundle);
+            startActivityForResult(intent, 102);
+        });
     }
 
     private void showDeleteMenu(boolean show){
