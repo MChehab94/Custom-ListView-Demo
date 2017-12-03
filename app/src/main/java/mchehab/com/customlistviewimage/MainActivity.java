@@ -31,12 +31,14 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+
 public class MainActivity extends AppCompatActivity {
 
     private final int RESULT_ADD = 101;
     private final int RESULT_EDIT = 102;
 
-    private ListView listView;
+    @BindView(R.id.listView) protected ListView listView;
     private ListViewAdapter listViewAdapter;
 
     private List<Person> listPerson;
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private AsyncTaskWait asyncTaskWait;
 
-    private FloatingActionButton floatingActionButtonAdd;
+    @BindView(R.id.floatingActionButtonAdd) protected FloatingActionButton floatingActionButtonAdd;
 
     private MenuItem menuItemSearch;
     private MenuItem menuItemDelete;
@@ -78,9 +80,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        floatingActionButtonAdd = findViewById(R.id.floatingActionButtonAdd);
-
-        listView = findViewById(R.id.listView);
         listCompleteData = readListFromFile();
         listPerson = new ArrayList<>(listCompleteData.subList(0, 10));
 

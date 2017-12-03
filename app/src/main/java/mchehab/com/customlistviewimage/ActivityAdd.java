@@ -13,12 +13,14 @@ import org.parceler.Parcels;
 import java.util.Arrays;
 import java.util.List;
 
+import butterknife.BindView;
+
 public class ActivityAdd extends AppCompatActivity {
 
-    private EditText editTextFirstName;
-    private EditText editTextLastName;
-    private EditText editTextDescription;
-    private Spinner spinnerImage;
+    @BindView(R.id.editTextFirstName) protected EditText editTextFirstName;
+    @BindView(R.id.editTextLastName) protected EditText editTextLastName;
+    @BindView(R.id.editTextDescription) protected EditText editTextDescription;
+    @BindView(R.id.spinnerImage) protected Spinner spinnerImage;
 
     private List<String> listImages;
 
@@ -30,12 +32,6 @@ public class ActivityAdd extends AppCompatActivity {
         setContentView(R.layout.activity_add);
 
         listImages = Arrays.asList(getResources().getStringArray(R.array.images));
-
-        editTextFirstName = findViewById(R.id.editTextFirstName);
-        editTextLastName = findViewById(R.id.editTextLastName);
-        editTextDescription = findViewById(R.id.editTextDescription);
-
-        spinnerImage = findViewById(R.id.spinnerImage);
 
         Button buttonAdd = findViewById(R.id.buttonAdd);
         buttonAdd.setOnClickListener(e -> {
