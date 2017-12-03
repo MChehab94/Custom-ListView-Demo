@@ -1,9 +1,11 @@
 package mchehab.com.customlistviewimage;
 
+import org.parceler.Parcel;
+
 /**
  * Created by muhammadchehab on 10/29/17.
  */
-
+@Parcel
 public class Person {
 
     private String firstName;
