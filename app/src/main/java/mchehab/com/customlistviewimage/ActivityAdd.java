@@ -41,10 +41,13 @@ public class ActivityAdd extends AppCompatActivity {
         buttonAdd.setOnClickListener(e -> {
             if(isValid()){
                 Intent intent = new Intent();
-                intent.putExtra("firstName", editTextFirstName.getText().toString());
-                intent.putExtra("lastName", editTextLastName.getText().toString());
-                intent.putExtra("description", editTextDescription.getText().toString());
-                intent.putExtra("imageName", (String)spinnerImage.getSelectedItem());
+                person.setFirstName(editTextFirstName.getText().toString());
+                person.setLastName(editTextLastName.getText().toString());
+                person.setDescription(editTextDescription.getText().toString());
+                person.setImageName((String)spinnerImage.getSelectedItem());
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("person", Parcels.wrap(person));
+                intent.putExtras(bundle);
                 setResult(RESULT_OK, intent);
                 finish();
             }else{
