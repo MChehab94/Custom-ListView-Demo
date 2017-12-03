@@ -33,6 +33,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final int RESULT_ADD = 101;
+    private final int RESULT_EDIT = 102;
+
     private ListView listView;
     private ListViewAdapter listViewAdapter;
 
@@ -96,10 +99,10 @@ public class MainActivity extends AppCompatActivity {
         if(resultCode == RESULT_OK){
             Bundle bundle = data.getExtras();
             Person person = Parcels.unwrap(bundle.getParcelable("person"));
-            if(requestCode == 101){
+            if(requestCode == RESULT_ADD){
                 listViewAdapter.addItem(person);
                 listViewAdapter.notifyDataSetChanged();
-            }else if(requestCode == 102){
+            }else if(requestCode == RESULT_EDIT){
                 listViewAdapter.setItem(personEditPosition, person);
                 listViewAdapter.notifyDataSetChanged();
             }
@@ -156,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
             bundle.putParcelable("person", Parcels.wrap(person));
             intent.putExtras(bundle);
             personEditPosition = position;
-            startActivityForResult(intent, 102);
+            startActivityForResult(intent, RESULT_EDIT);
         });
     }
 
@@ -168,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
     private void setFloatingActionButtonAddListener(){
         floatingActionButtonAdd.setOnClickListener(e -> {
             Intent intent = new Intent(this, ActivityAdd.class);
-            startActivityForResult(intent, 101);
+            startActivityForResult(intent, RESULT_ADD);
         });
     }
 
