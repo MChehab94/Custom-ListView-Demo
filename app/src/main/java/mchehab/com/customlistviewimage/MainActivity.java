@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     private MenuItem menuItemSearch;
     private MenuItem menuItemDelete;
 
+    private int personEditPosition;
+
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -91,14 +93,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 101 && resultCode == RESULT_OK){
-            Person person = new Person();
-            person.setFirstName(data.getStringExtra("firstName"));
-            person.setLastName(data.getStringExtra("lastName"));
-            person.setDescription(data.getStringExtra("description"));
-            person.setImageName(data.getStringExtra("imageName"));
-            listViewAdapter.addItem(person);
-            listViewAdapter.notifyDataSetChanged();
+        if(resultCode == RESULT_OK){
+            Bundle bundle = data.getExtras();
+            Person person = Parcels.unwrap(bundle.getParcelable("person"));
+            if(requestCode == 101){
+                listViewAdapter.addItem(person);
+                listViewAdapter.notifyDataSetChanged();
+            }else if(requestCode == 102){
+                listViewAdapter.setItem(personEditPosition, person);
+                listViewAdapter.notifyDataSetChanged();
+            }
         }
     }
 
@@ -146,11 +150,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void setListViewOnItemClickListener(){
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            Person person = listPerson.get(position);
+            Person person = (Person)listViewAdapter.getItem(position);
             Intent intent = new Intent(this, ActivityAdd.class);
             Bundle bundle = new Bundle();
             bundle.putParcelable("person", Parcels.wrap(person));
             intent.putExtras(bundle);
+            personEditPosition = position;
             startActivityForResult(intent, 102);
         });
     }
