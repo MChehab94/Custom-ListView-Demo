@@ -1,6 +1,5 @@
 package mchehab.com.customlistviewimage;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -9,22 +8,34 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import org.parceler.Parcels;
+
+import java.util.Arrays;
+import java.util.List;
+
 public class ActivityAdd extends AppCompatActivity {
 
     private EditText editTextFirstName;
     private EditText editTextLastName;
     private EditText editTextDescription;
+    private Spinner spinnerImage;
+
+    private List<String> listImages;
+
+    private Person person = new Person();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
 
+        listImages = Arrays.asList(getResources().getStringArray(R.array.images));
+
         editTextFirstName = findViewById(R.id.editTextFirstName);
         editTextLastName = findViewById(R.id.editTextLastName);
         editTextDescription = findViewById(R.id.editTextDescription);
 
-        Spinner spinnerImage = findViewById(R.id.spinnerImage);
+        spinnerImage = findViewById(R.id.spinnerImage);
 
         Button buttonAdd = findViewById(R.id.buttonAdd);
         buttonAdd.setOnClickListener(e -> {
@@ -40,6 +51,27 @@ public class ActivityAdd extends AppCompatActivity {
                 showAlertDialog();
             }
         });
+
+        checkExtras();
+    }
+
+    private void checkExtras(){
+        if(hasExtras()){
+            person = Parcels.unwrap(getIntent().getExtras().getParcelable("person"));
+            editTextFirstName.setText(person.getFirstName());
+            editTextLastName.setText(person.getLastName());
+            editTextDescription.setText(person.getDescription());
+            for(int i=0;i<listImages.size();i++){
+                if(listImages.get(i).equals(person.getImageName())){
+                    spinnerImage.setSelection(i);
+                    break;
+                }
+            }
+        }
+    }
+
+    private boolean hasExtras(){
+        return getIntent().getExtras() != null;
     }
 
     private boolean isValid(){
@@ -65,5 +97,4 @@ public class ActivityAdd extends AppCompatActivity {
                 .create()
                 .show();
     }
-
 }
