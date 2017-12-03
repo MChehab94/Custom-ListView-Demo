@@ -38,6 +38,16 @@ public class ListViewAdapter extends BaseAdapter {
         listPersonsFilter.add(person);
     }
 
+    public void setItem(int position, Person person){
+        for(int i=0;i<listPersons.size();i++){
+            if(listPersons.get(i).equals(listPersonsFilter.get(position))){
+                listPersons.set(i, person);
+                break;
+            }
+        }
+        listPersonsFilter.set(position, person);
+    }
+
     public void handleLongPress(int position, View view){
         if(listSelectedRows.contains(view)){
             listSelectedRows.remove(view);
@@ -70,7 +80,7 @@ public class ListViewAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return listPersons.get(position);
+        return listPersonsFilter.get(position);
     }
 
     @Override
